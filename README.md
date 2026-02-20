@@ -58,6 +58,7 @@ flowchart TB
 | Apache Dubbo | 3.2.x |
 | Spring Data JPA | (via Spring Boot) |
 | PostgreSQL | 15+ |
+| Redis | 7+ |
 | Flyway | 10.x |
 | ZooKeeper | 3.8+ |
 | HikariCP | 5.x |
@@ -101,6 +102,25 @@ flowchart TB
 | `mv_order_stat_platform_daily` | 平台每日汇总（运营总览） | `CONCURRENTLY` |
 
 定时任务 `DailyStatJob` 每天 00:05 自动 `REFRESH MATERIALIZED VIEW CONCURRENTLY` 刷新全部视图。
+
+---
+
+## Redis Cache / Redis 缓存
+
+高频读取的业务数据通过 Spring Cache + Redis 缓存，减少数据库查询：
+
+| Cache Name | Key Pattern | TTL | Description |
+|------------|-------------|-----|-------------|
+| `mch:info` | `{mchNo}` | 30min | 商户信息 |
+| `mch:app` | `{appId}` | 30min | 商户应用 |
+| `pay:way` | `{wayCode}` | 2h | 支付方式 |
+| `pay:way:list` | `{state}` | 2h | 支付方式列表 |
+| `pay:passage` | `{passageId}` | 2h | 支付通道 |
+| `pay:if:define` | `{ifCode}` | 2h | 支付接口定义 |
+| `pay:if:config` | `{infoType}:{infoId}:{ifCode}` | 30min | 支付接口配置 |
+| `mch:passage` | `{mchNo}:{appId}:{wayCode}` | 10min | 商户可用通道 |
+
+写操作自动通过 `@CacheEvict` 失效对应缓存。
 
 ---
 
@@ -151,6 +171,9 @@ Configure via environment variables:
 | `PG_SCHEMA` | Schema name | `public` |
 | `PG_USER` | PostgreSQL user | `postgres` |
 | `PG_PASSWORD` | PostgreSQL password | `postgres` |
+| `REDIS_HOST` | Redis host | `127.0.0.1` |
+| `REDIS_PORT` | Redis port | `6379` |
+| `REDIS_PASSWORD` | Redis password | _(empty)_ |
 | `ZK_HOST` | ZooKeeper host | `127.0.0.1` |
 | `ZK_PORT` | ZooKeeper port | `2181` |
 | `DUBBO_PORT` | Dubbo provider port | `20880` |

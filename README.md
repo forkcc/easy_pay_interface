@@ -113,7 +113,27 @@ flowchart TB
 - PostgreSQL 15+
 - ZooKeeper 3.8+
 
-### Build / 构建
+### Option A: Docker Compose (推荐)
+
+```bash
+# 复制环境变量模板
+cp .env.example .env
+
+# 一键启动全部服务 (PostgreSQL + ZooKeeper + Provider + Task)
+docker compose up -d
+
+# 查看日志
+docker compose logs -f provider
+docker compose logs -f task
+
+# 停止
+docker compose down
+
+# 停止并清除数据卷
+docker compose down -v
+```
+
+### Option B: 手动构建
 
 ```bash
 mvn clean package -DskipTests
@@ -216,6 +236,9 @@ dubbo:
 ```
 easy-pay-interface/
 ├── pom.xml                          # 父 POM (multi-module)
+├── Dockerfile                       # 多阶段构建 (provider + task)
+├── docker-compose.yml               # 一键部署编排
+├── .env.example                     # 环境变量模板
 ├── easy-pay-api/                    # 接口模块 (消费者依赖)
 │   ├── pom.xml
 │   └── src/main/java/com/easypay/api/

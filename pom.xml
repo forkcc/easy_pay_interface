@@ -39,7 +39,7 @@
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
         <dubbo.version>3.2.10</dubbo.version>
-        <mysql.version>8.0.33</mysql.version>
+        <postgresql.version>42.7.4</postgresql.version>
         <flyway.version>10.7.1</flyway.version>
     </properties>
 
@@ -69,9 +69,9 @@
             </dependency>
 
             <dependency>
-                <groupId>com.mysql</groupId>
-                <artifactId>mysql-connector-j</artifactId>
-                <version>${mysql.version}</version>
+                <groupId>org.postgresql</groupId>
+                <artifactId>postgresql</artifactId>
+                <version>${postgresql.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.flywaydb</groupId>
@@ -80,7 +80,7 @@
             </dependency>
             <dependency>
                 <groupId>org.flywaydb</groupId>
-                <artifactId>flyway-mysql</artifactId>
+                <artifactId>flyway-database-postgresql</artifactId>
                 <version>${flyway.version}</version>
             </dependency>
         </dependencies>

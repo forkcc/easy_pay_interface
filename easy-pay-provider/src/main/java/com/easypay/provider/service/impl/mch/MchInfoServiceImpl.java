@@ -8,6 +8,8 @@ import com.easypay.provider.entity.mch.MchInfo;
 import com.easypay.provider.repository.mch.MchInfoRepository;
 import jakarta.annotation.Resource;
 import org.apache.dubbo.config.annotation.DubboService;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.data.domain.Page;
@@ -15,6 +17,8 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+
+import static com.easypay.provider.config.CacheConstants.MCH_INFO;
 
 @DubboService
 public class MchInfoServiceImpl implements IMchInfoService {
@@ -24,6 +28,7 @@ public class MchInfoServiceImpl implements IMchInfoService {
 
     @Override
     @Transactional
+    @CacheEvict(value = MCH_INFO, key = "#result.mchNo", condition = "#result != null")
     public MchInfoDTO create(MchInfoDTO dto) {
         MchInfo entity = MchConverter.toEntity(dto);
         entity = mchInfoRepository.save(entity);
@@ -31,12 +36,14 @@ public class MchInfoServiceImpl implements IMchInfoService {
     }
 
     @Override
+    @Cacheable(value = MCH_INFO, key = "#mchNo", unless = "#result == null")
     public MchInfoDTO getByMchNo(String mchNo) {
         return mchInfoRepository.findById(mchNo).map(MchConverter::toDTO).orElse(null);
     }
 
     @Override
     @Transactional
+    @CacheEvict(value = MCH_INFO, key = "#dto.mchNo")
     public boolean update(MchInfoDTO dto) {
         return mchInfoRepository.findById(dto.getMchNo()).map(entity -> {
             entity.setMchName(dto.getMchName());
@@ -53,6 +60,7 @@ public class MchInfoServiceImpl implements IMchInfoService {
 
     @Override
     @Transactional
+    @CacheEvict(value = MCH_INFO, key = "#mchNo")
     public boolean updateState(String mchNo, Byte state) {
         return mchInfoRepository.findById(mchNo).map(entity -> {
             entity.setState(state);

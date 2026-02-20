@@ -8,12 +8,16 @@ import com.easypay.provider.entity.mch.MchApp;
 import com.easypay.provider.repository.mch.MchAppRepository;
 import jakarta.annotation.Resource;
 import org.apache.dubbo.config.annotation.DubboService;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.UUID;
+
+import static com.easypay.provider.config.CacheConstants.MCH_APP;
 
 @DubboService
 public class MchAppServiceImpl implements IMchAppService {
@@ -23,6 +27,7 @@ public class MchAppServiceImpl implements IMchAppService {
 
     @Override
     @Transactional
+    @CacheEvict(value = MCH_APP, key = "#result.appId", condition = "#result != null")
     public MchAppDTO create(MchAppDTO dto) {
         MchApp entity = MchConverter.toEntity(dto);
         entity = mchAppRepository.save(entity);
@@ -30,12 +35,14 @@ public class MchAppServiceImpl implements IMchAppService {
     }
 
     @Override
+    @Cacheable(value = MCH_APP, key = "#appId", unless = "#result == null")
     public MchAppDTO getByAppId(String appId) {
         return mchAppRepository.findById(appId).map(MchConverter::toDTO).orElse(null);
     }
 
     @Override
     @Transactional
+    @CacheEvict(value = MCH_APP, key = "#dto.appId")
     public boolean update(MchAppDTO dto) {
         return mchAppRepository.findById(dto.getAppId()).map(entity -> {
             entity.setAppName(dto.getAppName());
@@ -50,6 +57,7 @@ public class MchAppServiceImpl implements IMchAppService {
 
     @Override
     @Transactional
+    @CacheEvict(value = MCH_APP, key = "#appId")
     public boolean delete(String appId) {
         mchAppRepository.deleteById(appId);
         return true;
@@ -57,6 +65,7 @@ public class MchAppServiceImpl implements IMchAppService {
 
     @Override
     @Transactional
+    @CacheEvict(value = MCH_APP, key = "#appId")
     public String resetAppSecret(String appId) {
         return mchAppRepository.findById(appId).map(entity -> {
             String secret = UUID.randomUUID().toString().replace("-", "");

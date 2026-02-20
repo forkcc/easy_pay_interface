@@ -10,6 +10,9 @@ import jakarta.persistence.Table;
 
 import java.time.LocalDateTime;
 
+/**
+ * 结算记录实体，对应表 t_sett_record。
+ */
 @Entity
 @Table(name = "t_sett_record")
 public class SettRecord extends BaseEntity {

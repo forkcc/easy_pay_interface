@@ -6,6 +6,9 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 
+/**
+ * 支付接口定义实体，对应表 t_pay_interface_define。
+ */
 @Entity
 @Table(name = "t_pay_interface_define")
 public class PayInterfaceDefine extends BaseEntity {

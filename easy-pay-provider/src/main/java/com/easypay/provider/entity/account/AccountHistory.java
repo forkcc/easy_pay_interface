@@ -8,6 +8,9 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 
+/**
+ * 账户变动历史实体，对应表 t_account_history。
+ */
 @Entity
 @Table(name = "t_account_history")
 public class AccountHistory extends BaseEntity {

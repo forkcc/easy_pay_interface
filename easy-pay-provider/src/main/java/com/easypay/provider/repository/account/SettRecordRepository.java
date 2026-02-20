@@ -7,6 +7,9 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;
 
+/**
+ * 结算记录数据访问接口，对应实体 {@link SettRecord}。
+ */
 public interface SettRecordRepository extends JpaRepository<SettRecord, Long> {
 
     Optional<SettRecord> findBySettNo(String settNo);

@@ -6,6 +6,9 @@ import jakarta.persistence.PrePersist;
 import jakarta.persistence.PreUpdate;
 import java.time.LocalDateTime;
 
+/**
+ * 实体基类，提供创建时间和更新时间的自动维护。
+ */
 @MappedSuperclass
 public abstract class BaseEntity {
 

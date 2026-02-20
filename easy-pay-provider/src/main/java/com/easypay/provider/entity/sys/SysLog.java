@@ -8,6 +8,9 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 
+/**
+ * 系统操作日志实体，对应表 t_sys_log。
+ */
 @Entity
 @Table(name = "t_sys_log")
 public class SysLog extends BaseEntity {

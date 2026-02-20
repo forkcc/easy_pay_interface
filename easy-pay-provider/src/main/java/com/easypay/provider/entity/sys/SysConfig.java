@@ -6,6 +6,9 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 
+/**
+ * 系统配置实体，对应表 t_sys_config。
+ */
 @Entity
 @Table(name = "t_sys_config")
 public class SysConfig extends BaseEntity {

@@ -8,6 +8,9 @@ import jakarta.persistence.Table;
 
 import java.time.LocalDateTime;
 
+/**
+ * 退款订单实体，对应表 t_refund_order。
+ */
 @Entity
 @Table(name = "t_refund_order")
 public class RefundOrder extends BaseEntity {

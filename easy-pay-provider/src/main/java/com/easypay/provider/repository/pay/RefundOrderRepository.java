@@ -6,6 +6,9 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * 退款订单数据访问接口，对应实体 {@link RefundOrder}。
+ */
 public interface RefundOrderRepository extends JpaRepository<RefundOrder, String> {
 
     Optional<RefundOrder> findByMchNoAndMchRefundNo(String mchNo, String mchRefundNo);

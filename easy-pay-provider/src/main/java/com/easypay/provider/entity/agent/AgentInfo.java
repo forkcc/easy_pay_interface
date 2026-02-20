@@ -8,6 +8,9 @@ import jakarta.persistence.Table;
 
 import java.math.BigDecimal;
 
+/**
+ * 代理商信息实体，对应表 t_agent_info。
+ */
 @Entity
 @Table(name = "t_agent_info")
 public class AgentInfo extends BaseEntity {

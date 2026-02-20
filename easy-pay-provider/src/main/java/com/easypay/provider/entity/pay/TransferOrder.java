@@ -8,6 +8,9 @@ import jakarta.persistence.Table;
 
 import java.time.LocalDateTime;
 
+/**
+ * 转账订单实体，对应表 t_transfer_order。
+ */
 @Entity
 @Table(name = "t_transfer_order")
 public class TransferOrder extends BaseEntity {

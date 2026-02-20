@@ -8,6 +8,9 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 
+/**
+ * 账户余额实体，对应表 t_account_balance。
+ */
 @Entity
 @Table(name = "t_account_balance")
 public class AccountBalance extends BaseEntity {

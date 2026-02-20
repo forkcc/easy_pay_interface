@@ -6,6 +6,9 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 
+/**
+ * 商户信息实体，对应表 t_mch_info。
+ */
 @Entity
 @Table(name = "t_mch_info")
 public class MchInfo extends BaseEntity {

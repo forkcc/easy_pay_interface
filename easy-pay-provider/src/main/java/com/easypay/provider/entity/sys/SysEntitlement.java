@@ -6,6 +6,9 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 
+/**
+ * 系统权限实体，对应表 t_sys_entitlement。
+ */
 @Entity
 @Table(name = "t_sys_entitlement")
 public class SysEntitlement extends BaseEntity {

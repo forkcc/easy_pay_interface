@@ -6,6 +6,9 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 
+/**
+ * 支付方式实体，对应表 t_pay_way。
+ */
 @Entity
 @Table(name = "t_pay_way")
 public class PayWay extends BaseEntity {

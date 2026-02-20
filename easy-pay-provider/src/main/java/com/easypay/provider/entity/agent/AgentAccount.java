@@ -8,6 +8,9 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 
+/**
+ * 代理商账户实体，对应表 t_agent_account。
+ */
 @Entity
 @Table(name = "t_agent_account")
 public class AgentAccount extends BaseEntity {

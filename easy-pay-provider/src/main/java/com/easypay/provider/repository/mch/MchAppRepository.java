@@ -7,6 +7,9 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
 
+/**
+ * 商户应用数据访问接口，对应实体 {@link MchApp}。
+ */
 public interface MchAppRepository extends JpaRepository<MchApp, String> {
 
     List<MchApp> findByMchNo(String mchNo);

@@ -8,6 +8,9 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 
+/**
+ * 系统用户实体，对应表 t_sys_user。
+ */
 @Entity
 @Table(name = "t_sys_user")
 public class SysUser extends BaseEntity {

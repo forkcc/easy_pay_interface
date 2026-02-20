@@ -8,6 +8,9 @@ import org.springframework.data.repository.query.Param;
 import java.time.LocalDateTime;
 import java.util.Optional;
 
+/**
+ * 支付订单数据访问接口，对应实体 {@link PayOrder}。
+ */
 public interface PayOrderRepository extends JpaRepository<PayOrder, String> {
 
     Optional<PayOrder> findByMchNoAndMchOrderNo(String mchNo, String mchOrderNo);

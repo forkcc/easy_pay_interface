@@ -8,6 +8,9 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 
+/**
+ * 结算银行账户实体，对应表 t_sett_bank_account。
+ */
 @Entity
 @Table(name = "t_sett_bank_account")
 public class SettBankAccount extends BaseEntity {

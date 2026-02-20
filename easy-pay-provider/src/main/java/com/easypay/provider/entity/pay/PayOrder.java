@@ -8,6 +8,9 @@ import jakarta.persistence.Table;
 
 import java.time.LocalDateTime;
 
+/**
+ * 支付订单实体，对应表 t_pay_order。
+ */
 @Entity
 @Table(name = "t_pay_order")
 public class PayOrder extends BaseEntity {

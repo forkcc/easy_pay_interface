@@ -8,6 +8,9 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 
+/**
+ * 支付通道实体，对应表 t_pay_passage。
+ */
 @Entity
 @Table(name = "t_pay_passage")
 public class PayPassage extends BaseEntity {

@@ -6,6 +6,9 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 
+/**
+ * 商户应用实体，对应表 t_mch_app。
+ */
 @Entity
 @Table(name = "t_mch_app")
 public class MchApp extends BaseEntity {

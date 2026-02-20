@@ -7,6 +7,9 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
 
+/**
+ * 商户通知记录数据访问接口，对应实体 {@link MchNotify}。
+ */
 public interface MchNotifyRepository extends JpaRepository<MchNotify, Long> {
 
     List<MchNotify> findByStateOrderByCreatedAtAsc(Byte state, Pageable pageable);

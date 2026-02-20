@@ -8,6 +8,9 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 
+/**
+ * 支付接口配置实体，对应表 t_pay_interface_config。
+ */
 @Entity
 @Table(name = "t_pay_interface_config")
 public class PayInterfaceConfig extends BaseEntity {

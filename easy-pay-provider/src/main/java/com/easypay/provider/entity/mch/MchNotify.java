@@ -10,6 +10,9 @@ import jakarta.persistence.Table;
 
 import java.time.LocalDateTime;
 
+/**
+ * 商户通知记录实体，对应表 t_mch_notify。
+ */
 @Entity
 @Table(name = "t_mch_notify")
 public class MchNotify extends BaseEntity {

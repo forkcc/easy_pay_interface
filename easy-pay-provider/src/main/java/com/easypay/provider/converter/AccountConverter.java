@@ -4,12 +4,10 @@ import com.easypay.api.dto.account.AccountBalanceDTO;
 import com.easypay.api.dto.account.AccountHistoryDTO;
 import com.easypay.api.dto.account.SettBankAccountDTO;
 import com.easypay.api.dto.account.SettRecordDTO;
-import com.easypay.api.dto.stat.OrderStatDailyDTO;
 import com.easypay.provider.entity.account.AccountBalance;
 import com.easypay.provider.entity.account.AccountHistory;
 import com.easypay.provider.entity.account.SettBankAccount;
 import com.easypay.provider.entity.account.SettRecord;
-import com.easypay.provider.entity.stat.OrderStatDaily;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
@@ -228,60 +226,6 @@ public class AccountConverter {
         }
         List<SettBankAccountDTO> result = new ArrayList<>(entities.size());
         for (SettBankAccount entity : entities) {
-            result.add(toDTO(entity));
-        }
-        return result;
-    }
-
-    public static OrderStatDailyDTO toDTO(OrderStatDaily entity) {
-        if (entity == null) {
-            return null;
-        }
-        OrderStatDailyDTO dto = new OrderStatDailyDTO();
-        dto.setId(entity.getId());
-        dto.setStatDate(entity.getStatDate());
-        dto.setMchNo(entity.getMchNo());
-        dto.setAgentNo(entity.getAgentNo());
-        dto.setWayCode(entity.getWayCode());
-        dto.setPassageId(entity.getPassageId());
-        dto.setOrderCount(entity.getOrderCount());
-        dto.setOrderAmount(entity.getOrderAmount());
-        dto.setFeeAmount(entity.getFeeAmount());
-        dto.setSuccessCount(entity.getSuccessCount());
-        dto.setSuccessAmount(entity.getSuccessAmount());
-        dto.setCreatedAt(entity.getCreatedAt());
-        return dto;
-    }
-
-    public static OrderStatDaily toEntity(OrderStatDailyDTO dto) {
-        if (dto == null) {
-            return null;
-        }
-        OrderStatDaily entity = new OrderStatDaily();
-        entity.setId(dto.getId());
-        entity.setStatDate(dto.getStatDate());
-        entity.setMchNo(dto.getMchNo());
-        entity.setAgentNo(dto.getAgentNo());
-        entity.setWayCode(dto.getWayCode());
-        entity.setPassageId(dto.getPassageId());
-        entity.setOrderCount(dto.getOrderCount());
-        entity.setOrderAmount(dto.getOrderAmount());
-        entity.setFeeAmount(dto.getFeeAmount());
-        entity.setSuccessCount(dto.getSuccessCount());
-        entity.setSuccessAmount(dto.getSuccessAmount());
-        entity.setCreatedAt(dto.getCreatedAt());
-        return entity;
-    }
-
-    public static List<OrderStatDailyDTO> toOrderStatDailyDTOList(List<OrderStatDaily> entities) {
-        if (entities == null) {
-            return null;
-        }
-        if (entities.isEmpty()) {
-            return Collections.emptyList();
-        }
-        List<OrderStatDailyDTO> result = new ArrayList<>(entities.size());
-        for (OrderStatDaily entity : entities) {
             result.add(toDTO(entity));
         }
         return result;

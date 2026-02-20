@@ -3,31 +3,29 @@ package com.easypay.provider.service.impl.stat;
 import com.easypay.api.dto.stat.OrderStatDailyDTO;
 import com.easypay.api.dto.stat.TradeStatDTO;
 import com.easypay.api.service.stat.IStatService;
-import com.easypay.provider.converter.AccountConverter;
-import com.easypay.provider.entity.stat.OrderStatDaily;
-import com.easypay.provider.repository.stat.OrderStatDailyRepository;
-import com.easypay.provider.repository.pay.PayOrderRepository;
-import jakarta.annotation.Resource;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
-import jakarta.persistence.Query;
 import org.apache.dubbo.config.annotation.DubboService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.sql.Date;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 
 @DubboService
 public class StatServiceImpl implements IStatService {
 
-    @Resource
-    private OrderStatDailyRepository orderStatDailyRepository;
+    private static final Logger log = LoggerFactory.getLogger(StatServiceImpl.class);
 
-    @Resource
-    private PayOrderRepository payOrderRepository;
+    private static final String[] MATERIALIZED_VIEWS = {
+            "mv_order_stat_daily",
+            "mv_order_stat_mch",
+            "mv_order_stat_way",
+            "mv_order_stat_platform_daily"
+    };
 
     @PersistenceContext
     private EntityManager entityManager;
@@ -36,66 +34,121 @@ public class StatServiceImpl implements IStatService {
     @Transactional
     public boolean aggregateDaily(LocalDate date) {
         try {
-            orderStatDailyRepository.deleteByStatDate(date);
-            LocalDateTime startOfDay = date.atStartOfDay();
-            LocalDateTime endOfDay = date.atTime(LocalTime.MAX);
-            String sql = "SELECT mch_no, way_code, COUNT(*), COALESCE(SUM(amount),0), COALESCE(SUM(fee_amount),0), SUM(CASE WHEN state=2 THEN 1 ELSE 0 END), SUM(CASE WHEN state=2 THEN amount ELSE 0 END) FROM t_pay_order WHERE created_at >= :start AND created_at <= :end GROUP BY mch_no, way_code";
-            Query query = entityManager.createNativeQuery(sql);
-            query.setParameter("start", startOfDay);
-            query.setParameter("end", endOfDay);
-            @SuppressWarnings("unchecked")
-            List<Object[]> rows = query.getResultList();
-            List<OrderStatDaily> entities = new ArrayList<>();
-            for (Object[] row : rows) {
-                OrderStatDaily stat = new OrderStatDaily();
-                stat.setStatDate(date);
-                stat.setMchNo((String) row[0]);
-                stat.setWayCode((String) row[1]);
-                stat.setOrderCount(((Number) row[2]).intValue());
-                stat.setOrderAmount(((Number) row[3]).longValue());
-                stat.setFeeAmount(((Number) row[4]).longValue());
-                stat.setSuccessCount(((Number) row[5]).intValue());
-                stat.setSuccessAmount(((Number) row[6]).longValue());
-                entities.add(stat);
+            for (String view : MATERIALIZED_VIEWS) {
+                entityManager.createNativeQuery(
+                        "REFRESH MATERIALIZED VIEW CONCURRENTLY " + view
+                ).executeUpdate();
             }
-            orderStatDailyRepository.saveAll(entities);
+            log.info("Refreshed all {} materialized views (triggered for date: {})", MATERIALIZED_VIEWS.length, date);
             return true;
         } catch (Exception e) {
+            log.error("Failed to refresh materialized views", e);
             return false;
         }
     }
 
     @Override
-    public List<OrderStatDailyDTO> queryDailyStat(LocalDate startDate, LocalDate endDate, String mchNo, String agentNo, String wayCode, Long passageId) {
-        List<OrderStatDaily> list = orderStatDailyRepository.queryByCriteria(startDate, endDate, mchNo, agentNo, wayCode, passageId);
-        return AccountConverter.toOrderStatDailyDTOList(list);
+    @SuppressWarnings("unchecked")
+    public List<OrderStatDailyDTO> queryDailyStat(LocalDate startDate, LocalDate endDate,
+                                                   String mchNo, String agentNo,
+                                                   String wayCode, Long passageId) {
+        StringBuilder sql = new StringBuilder(
+                "SELECT stat_date, mch_no, agent_no, way_code, order_count, order_amount, " +
+                "fee_amount, success_count, success_amount FROM mv_order_stat_daily WHERE 1=1"
+        );
+        List<Object> params = new ArrayList<>();
+        int paramIdx = 1;
+
+        if (startDate != null) {
+            sql.append(" AND stat_date >= ?").append(paramIdx++);
+            params.add(Date.valueOf(startDate));
+        }
+        if (endDate != null) {
+            sql.append(" AND stat_date <= ?").append(paramIdx++);
+            params.add(Date.valueOf(endDate));
+        }
+        if (mchNo != null && !mchNo.isEmpty()) {
+            sql.append(" AND mch_no = ?").append(paramIdx++);
+            params.add(mchNo);
+        }
+        if (agentNo != null && !agentNo.isEmpty()) {
+            sql.append(" AND agent_no = ?").append(paramIdx++);
+            params.add(agentNo);
+        }
+        if (wayCode != null && !wayCode.isEmpty()) {
+            sql.append(" AND way_code = ?").append(paramIdx++);
+            params.add(wayCode);
+        }
+        sql.append(" ORDER BY stat_date DESC, mch_no");
+
+        var query = entityManager.createNativeQuery(sql.toString());
+        for (int i = 0; i < params.size(); i++) {
+            query.setParameter(i + 1, params.get(i));
+        }
+
+        List<Object[]> rows = query.getResultList();
+        List<OrderStatDailyDTO> result = new ArrayList<>(rows.size());
+        for (Object[] row : rows) {
+            OrderStatDailyDTO dto = new OrderStatDailyDTO();
+            dto.setStatDate(row[0] instanceof Date d ? d.toLocalDate() : ((java.sql.Date) row[0]).toLocalDate());
+            dto.setMchNo((String) row[1]);
+            dto.setAgentNo((String) row[2]);
+            dto.setWayCode((String) row[3]);
+            dto.setOrderCount(((Number) row[4]).intValue());
+            dto.setOrderAmount(((Number) row[5]).longValue());
+            dto.setFeeAmount(((Number) row[6]).longValue());
+            dto.setSuccessCount(((Number) row[7]).intValue());
+            dto.setSuccessAmount(((Number) row[8]).longValue());
+            result.add(dto);
+        }
+        return result;
     }
 
     @Override
-    public TradeStatDTO summaryBetween(LocalDate startDate, LocalDate endDate, String mchNo, String agentNo) {
-        List<OrderStatDaily> list = orderStatDailyRepository.queryByCriteria(startDate, endDate, mchNo, agentNo, null, null);
+    @SuppressWarnings("unchecked")
+    public TradeStatDTO summaryBetween(LocalDate startDate, LocalDate endDate,
+                                       String mchNo, String agentNo) {
+        StringBuilder sql = new StringBuilder(
+                "SELECT COALESCE(SUM(order_count),0), COALESCE(SUM(order_amount),0), " +
+                "COALESCE(SUM(fee_amount),0), COALESCE(SUM(success_count),0), " +
+                "COALESCE(SUM(success_amount),0) FROM mv_order_stat_daily WHERE 1=1"
+        );
+        List<Object> params = new ArrayList<>();
+        int paramIdx = 1;
+
+        if (startDate != null) {
+            sql.append(" AND stat_date >= ?").append(paramIdx++);
+            params.add(Date.valueOf(startDate));
+        }
+        if (endDate != null) {
+            sql.append(" AND stat_date <= ?").append(paramIdx++);
+            params.add(Date.valueOf(endDate));
+        }
+        if (mchNo != null && !mchNo.isEmpty()) {
+            sql.append(" AND mch_no = ?").append(paramIdx++);
+            params.add(mchNo);
+        }
+        if (agentNo != null && !agentNo.isEmpty()) {
+            sql.append(" AND agent_no = ?").append(paramIdx++);
+            params.add(agentNo);
+        }
+
+        var query = entityManager.createNativeQuery(sql.toString());
+        for (int i = 0; i < params.size(); i++) {
+            query.setParameter(i + 1, params.get(i));
+        }
+
+        Object[] row = (Object[]) query.getSingleResult();
         TradeStatDTO result = new TradeStatDTO();
         result.setStartDate(startDate);
         result.setEndDate(endDate);
         result.setMchNo(mchNo);
         result.setAgentNo(agentNo);
-        int totalCount = 0;
-        long totalAmount = 0L;
-        long totalFee = 0L;
-        int successCount = 0;
-        long successAmount = 0L;
-        for (OrderStatDaily stat : list) {
-            totalCount += stat.getOrderCount() != null ? stat.getOrderCount() : 0;
-            totalAmount += stat.getOrderAmount() != null ? stat.getOrderAmount() : 0L;
-            totalFee += stat.getFeeAmount() != null ? stat.getFeeAmount() : 0L;
-            successCount += stat.getSuccessCount() != null ? stat.getSuccessCount() : 0;
-            successAmount += stat.getSuccessAmount() != null ? stat.getSuccessAmount() : 0L;
-        }
-        result.setTotalCount(totalCount);
-        result.setTotalAmount(totalAmount);
-        result.setTotalFee(totalFee);
-        result.setSuccessCount(successCount);
-        result.setSuccessAmount(successAmount);
+        result.setTotalCount(((Number) row[0]).intValue());
+        result.setTotalAmount(((Number) row[1]).longValue());
+        result.setTotalFee(((Number) row[2]).longValue());
+        result.setSuccessCount(((Number) row[3]).intValue());
+        result.setSuccessAmount(((Number) row[4]).longValue());
         return result;
     }
 }

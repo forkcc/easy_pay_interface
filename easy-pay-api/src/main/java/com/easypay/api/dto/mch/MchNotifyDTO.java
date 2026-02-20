@@ -3,21 +3,36 @@ package com.easypay.api.dto.mch;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
+/**
+ * 商户通知记录数据传输对象
+ */
 public class MchNotifyDTO implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
+    // 通知ID
     private Long notifyId;
+    // 订单ID
     private String orderId;
+    // 订单类型
     private String orderType;
+    // 商户编号
     private String mchNo;
+    // 商户订单号
     private String mchOrderNo;
+    // 通知地址
     private String notifyUrl;
+    // 通知状态
     private Byte state;
+    // 已通知次数
     private Integer notifyCount;
+    // 最大通知次数
     private Long notifyCountLimit;
+    // 最后一次通知时间
     private LocalDateTime lastNotifyTime;
+    // 创建时间
     private LocalDateTime createdAt;
+    // 更新时间
     private LocalDateTime updatedAt;
 
     public MchNotifyDTO() {

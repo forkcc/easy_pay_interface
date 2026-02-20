@@ -3,19 +3,32 @@ package com.easypay.api.dto.mch;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
+/**
+ * 商户应用数据传输对象
+ */
 public class MchAppDTO implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
+    // 应用ID
     private String appId;
+    // 商户编号
     private String mchNo;
+    // 应用名称
     private String appName;
+    // 应用状态
     private Byte state;
+    // 应用密钥
     private String appSecret;
+    // 异步通知地址
     private String notifyUrl;
+    // 同步跳转地址
     private String returnUrl;
+    // 备注
     private String remark;
+    // 创建时间
     private LocalDateTime createdAt;
+    // 更新时间
     private LocalDateTime updatedAt;
 
     public MchAppDTO() {

@@ -1,5 +1,8 @@
 package com.easypay.api.enums;
 
+/**
+ * 转账订单状态枚举
+ */
 public enum TransferStatusEnum {
     INIT((byte) 0, "初始"),
     ING((byte) 1, "转账中"),

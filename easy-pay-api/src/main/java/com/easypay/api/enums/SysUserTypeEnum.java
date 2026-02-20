@@ -1,5 +1,8 @@
 package com.easypay.api.enums;
 
+/**
+ * 系统用户类型枚举
+ */
 public enum SysUserTypeEnum {
     MGR((byte) 1, "运营"),
     MCH((byte) 2, "商户"),

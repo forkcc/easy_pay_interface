@@ -3,25 +3,44 @@ package com.easypay.api.dto.account;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
+/**
+ * 结算记录数据传输对象
+ */
 public class SettRecordDTO implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
+    // 主键ID
     private Long id;
+    // 结算单号
     private String settNo;
+    // 账户编号
     private String accountNo;
+    // 商户编号
     private String mchNo;
+    // 代理商编号
     private String agentNo;
+    // 结算金额
     private Long settAmount;
+    // 手续费金额
     private Long feeAmount;
+    // 打款金额
     private Long remitAmount;
+    // 结算状态
     private Byte state;
+    // 银行账户号
     private String bankAccountNo;
+    // 银行账户名
     private String bankAccountName;
+    // 银行名称
     private String bankName;
+    // 错误信息
     private String errMsg;
+    // 结算成功时间
     private LocalDateTime successTime;
+    // 创建时间
     private LocalDateTime createdAt;
+    // 更新时间
     private LocalDateTime updatedAt;
 
     public SettRecordDTO() {

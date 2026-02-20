@@ -3,16 +3,26 @@ package com.easypay.api.dto.agent;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
+/**
+ * 代理商账户数据传输对象
+ */
 public class AgentAccountDTO implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
+    // 主键ID
     private Long id;
+    // 代理商编号
     private String agentNo;
+    // 账户余额
     private Long balance;
+    // 冻结金额
     private Long frozenAmount;
+    // 已结算金额
     private Long settledAmount;
+    // 创建时间
     private LocalDateTime createdAt;
+    // 更新时间
     private LocalDateTime updatedAt;
 
     public AgentAccountDTO() {

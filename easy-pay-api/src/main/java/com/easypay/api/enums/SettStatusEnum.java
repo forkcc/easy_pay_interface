@@ -1,5 +1,8 @@
 package com.easypay.api.enums;
 
+/**
+ * 结算状态枚举
+ */
 public enum SettStatusEnum {
     INIT((byte) 0, "初始"),
     ING((byte) 1, "结算中"),

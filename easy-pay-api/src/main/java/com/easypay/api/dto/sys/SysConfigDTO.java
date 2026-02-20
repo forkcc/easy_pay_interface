@@ -3,16 +3,26 @@ package com.easypay.api.dto.sys;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
+/**
+ * 系统配置数据传输对象
+ */
 public class SysConfigDTO implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
+    // 配置键
     private String configKey;
+    // 配置名称
     private String configName;
+    // 配置值
     private String configValue;
+    // 配置分组
     private String configGroup;
+    // 备注
     private String remark;
+    // 创建时间
     private LocalDateTime createdAt;
+    // 更新时间
     private LocalDateTime updatedAt;
 
     public SysConfigDTO() {

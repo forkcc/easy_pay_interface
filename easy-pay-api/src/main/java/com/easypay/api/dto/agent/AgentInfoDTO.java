@@ -4,21 +4,36 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
+/**
+ * 代理商基本信息数据传输对象
+ */
 public class AgentInfoDTO implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
+    // 代理商编号
     private String agentNo;
+    // 代理商名称
     private String agentName;
+    // 代理商等级
     private Byte level;
+    // 上级代理商编号
     private String parentAgentNo;
+    // 分润比例
     private BigDecimal profitRate;
+    // 代理商状态
     private Byte state;
+    // 联系人姓名
     private String contactName;
+    // 联系人电话
     private String contactTel;
+    // 联系人邮箱
     private String contactEmail;
+    // 备注
     private String remark;
+    // 创建时间
     private LocalDateTime createdAt;
+    // 更新时间
     private LocalDateTime updatedAt;
 
     public AgentInfoDTO() {

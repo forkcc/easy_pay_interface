@@ -3,33 +3,60 @@ package com.easypay.api.dto.pay;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
+/**
+ * 支付订单数据传输对象
+ */
 public class PayOrderDTO implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
+    // 支付订单号
     private String payOrderId;
+    // 商户编号
     private String mchNo;
+    // 应用ID
     private String appId;
+    // 商户订单号
     private String mchOrderNo;
+    // 支付方式编码
     private String wayCode;
+    // 支付金额（单位：分）
     private Long amount;
+    // 币种
     private String currency;
+    // 订单状态
     private Byte state;
+    // 客户端IP
     private String clientIp;
+    // 订单标题
     private String subject;
+    // 订单描述
     private String body;
+    // 手续费费率
     private Long feeRate;
+    // 手续费金额
     private Long feeAmount;
+    // 渠道订单号
     private String channelOrderNo;
+    // 渠道扩展参数
     private String channelExtra;
+    // 异步通知地址
     private String notifyUrl;
+    // 同步跳转地址
     private String returnUrl;
+    // 错误码
     private String errCode;
+    // 错误信息
     private String errMsg;
+    // 扩展参数
     private String extParam;
+    // 订单过期时间
     private LocalDateTime expiredTime;
+    // 支付成功时间
     private LocalDateTime successTime;
+    // 创建时间
     private LocalDateTime createdAt;
+    // 更新时间
     private LocalDateTime updatedAt;
 
     public PayOrderDTO() {

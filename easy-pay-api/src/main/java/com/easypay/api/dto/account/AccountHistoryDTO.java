@@ -3,19 +3,32 @@ package com.easypay.api.dto.account;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
+/**
+ * 账户变动历史数据传输对象
+ */
 public class AccountHistoryDTO implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
+    // 主键ID
     private Long id;
+    // 账户编号
     private String accountNo;
+    // 变动类型
     private Byte changeType;
+    // 变动金额
     private Long changeAmount;
+    // 变动前余额
     private Long balanceBefore;
+    // 变动后余额
     private Long balanceAfter;
+    // 业务订单号
     private String bizOrderNo;
+    // 业务类型
     private String bizType;
+    // 备注
     private String remark;
+    // 创建时间
     private LocalDateTime createdAt;
 
     public AccountHistoryDTO() {

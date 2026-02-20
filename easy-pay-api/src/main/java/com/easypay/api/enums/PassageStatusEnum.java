@@ -1,5 +1,8 @@
 package com.easypay.api.enums;
 
+/**
+ * 支付通道状态枚举
+ */
 public enum PassageStatusEnum {
     ACTIVE((byte) 1, "正常"),
     DISABLED((byte) 0, "停用");

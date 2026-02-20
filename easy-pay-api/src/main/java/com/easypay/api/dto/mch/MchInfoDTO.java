@@ -3,22 +3,38 @@ package com.easypay.api.dto.mch;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
+/**
+ * 商户基本信息数据传输对象
+ */
 public class MchInfoDTO implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
+    // 商户编号
     private String mchNo;
+    // 商户名称
     private String mchName;
+    // 商户简称
     private String mchShortName;
+    // 商户类型
     private Byte type;
+    // 商户状态
     private Byte state;
+    // 所属代理商编号
     private String agentNo;
+    // 联系人姓名
     private String contactName;
+    // 联系人电话
     private String contactTel;
+    // 联系人邮箱
     private String contactEmail;
+    // 接口密钥
     private String apiKey;
+    // 备注
     private String remark;
+    // 创建时间
     private LocalDateTime createdAt;
+    // 更新时间
     private LocalDateTime updatedAt;
 
     public MchInfoDTO() {

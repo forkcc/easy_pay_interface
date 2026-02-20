@@ -1,5 +1,8 @@
 package com.easypay.api.enums;
 
+/**
+ * 支付订单状态枚举
+ */
 public enum PayOrderStatusEnum {
     INIT((byte) 0, "初始"),
     ING((byte) 1, "支付中"),

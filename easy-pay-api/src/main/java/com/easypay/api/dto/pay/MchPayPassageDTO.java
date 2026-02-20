@@ -3,19 +3,32 @@ package com.easypay.api.dto.pay;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
+/**
+ * 商户支付通道数据传输对象
+ */
 public class MchPayPassageDTO implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
+    // 主键ID
     private Long id;
+    // 商户编号
     private String mchNo;
+    // 应用ID
     private String appId;
+    // 支付方式编码
     private String wayCode;
+    // 通道ID
     private Long passageId;
+    // 手续费费率
     private Long feeRate;
+    // 手续费固定金额
     private Long feeAmount;
+    // 状态
     private Byte state;
+    // 创建时间
     private LocalDateTime createdAt;
+    // 更新时间
     private LocalDateTime updatedAt;
 
     public MchPayPassageDTO() {

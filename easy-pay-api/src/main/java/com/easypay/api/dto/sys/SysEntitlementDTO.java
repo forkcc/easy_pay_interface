@@ -3,20 +3,34 @@ package com.easypay.api.dto.sys;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
+/**
+ * 系统权限资源数据传输对象
+ */
 public class SysEntitlementDTO implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
+    // 权限ID
     private String entId;
+    // 权限名称
     private String entName;
+    // 权限类型
     private Byte entType;
+    // 菜单图标
     private String menuIcon;
+    // 菜单路径
     private String menuUri;
+    // 父级权限ID
     private String parentId;
+    // 排序值
     private Integer entSort;
+    // 状态
     private Byte state;
+    // 系统类型
     private String sysType;
+    // 创建时间
     private LocalDateTime createdAt;
+    // 更新时间
     private LocalDateTime updatedAt;
 
     public SysEntitlementDTO() {

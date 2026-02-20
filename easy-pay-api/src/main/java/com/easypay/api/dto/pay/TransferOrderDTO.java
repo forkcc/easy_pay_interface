@@ -3,27 +3,48 @@ package com.easypay.api.dto.pay;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
+/**
+ * 转账订单数据传输对象
+ */
 public class TransferOrderDTO implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
+    // 转账订单号
     private String transferId;
+    // 商户编号
     private String mchNo;
+    // 应用ID
     private String appId;
+    // 商户转账单号
     private String mchTransferNo;
+    // 支付方式编码
     private String wayCode;
+    // 转账金额（单位：分）
     private Long amount;
+    // 币种
     private String currency;
+    // 转账状态
     private Byte state;
+    // 收款账号
     private String accountNo;
+    // 收款人姓名
     private String accountName;
+    // 收款银行名称
     private String bankName;
+    // 渠道订单号
     private String channelOrderNo;
+    // 错误码
     private String errCode;
+    // 错误信息
     private String errMsg;
+    // 扩展参数
     private String extParam;
+    // 转账成功时间
     private LocalDateTime successTime;
+    // 创建时间
     private LocalDateTime createdAt;
+    // 更新时间
     private LocalDateTime updatedAt;
 
     public TransferOrderDTO() {

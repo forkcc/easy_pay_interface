@@ -1,5 +1,8 @@
 package com.easypay.api.enums;
 
+/**
+ * 代理商状态枚举
+ */
 public enum AgentStatusEnum {
     ACTIVE((byte) 1, "正常"),
     DISABLED((byte) 0, "停用");

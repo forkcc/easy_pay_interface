@@ -3,20 +3,34 @@ package com.easypay.api.dto.pay;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
+/**
+ * 支付接口定义数据传输对象
+ */
 public class PayInterfaceDefineDTO implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
+    // 接口编码
     private String ifCode;
+    // 接口名称
     private String ifName;
+    // 接口类型
     private Byte ifType;
+    // 配置页面类型
     private String configPageType;
+    // 图标
     private String icon;
+    // 背景颜色
     private String bgColor;
+    // 状态
     private Byte state;
+    // 备注
     private String remark;
+    // 配置信息
     private String configInfo;
+    // 创建时间
     private LocalDateTime createdAt;
+    // 更新时间
     private LocalDateTime updatedAt;
 
     public PayInterfaceDefineDTO() {

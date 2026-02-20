@@ -3,20 +3,34 @@ package com.easypay.api.dto.sys;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
+/**
+ * 系统用户数据传输对象
+ */
 public class SysUserDTO implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
+    // 用户ID
     private Long sysUserId;
+    // 登录用户名
     private String loginUsername;
+    // 真实姓名
     private String realname;
+    // 手机号
     private String telphone;
+    // 性别
     private Byte sex;
+    // 头像地址
     private String avatarUrl;
+    // 用户类型
     private Byte userType;
+    // 所属机构ID
     private String belongId;
+    // 用户状态
     private Byte state;
+    // 创建时间
     private LocalDateTime createdAt;
+    // 更新时间
     private LocalDateTime updatedAt;
 
     public SysUserDTO() {

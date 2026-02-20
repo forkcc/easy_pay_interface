@@ -3,19 +3,32 @@ package com.easypay.api.dto.account;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
+/**
+ * 账户余额数据传输对象
+ */
 public class AccountBalanceDTO implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
+    // 主键ID
     private Long id;
+    // 账户编号
     private String accountNo;
+    // 账户名称
     private String accountName;
+    // 账户类型
     private Byte accountType;
+    // 账户余额
     private Long balance;
+    // 冻结金额
     private Long frozenAmount;
+    // 待结算金额
     private Long unsettledAmount;
+    // 已结算金额
     private Long settledAmount;
+    // 创建时间
     private LocalDateTime createdAt;
+    // 更新时间
     private LocalDateTime updatedAt;
 
     public AccountBalanceDTO() {

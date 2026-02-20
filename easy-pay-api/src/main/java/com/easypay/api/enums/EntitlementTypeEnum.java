@@ -1,5 +1,8 @@
 package com.easypay.api.enums;
 
+/**
+ * 权限资源类型枚举
+ */
 public enum EntitlementTypeEnum {
     MENU((byte) 1, "菜单"),
     BUTTON((byte) 2, "按钮");

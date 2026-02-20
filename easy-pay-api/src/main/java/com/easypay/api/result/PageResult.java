@@ -4,13 +4,20 @@ import java.io.Serializable;
 import java.util.Collections;
 import java.util.List;
 
+/**
+ * 通用分页查询结果封装
+ */
 public class PageResult<T> implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
+    // 数据列表
     private List<T> records;
+    // 总记录数
     private long total;
+    // 当前页码
     private int pageNum;
+    // 每页条数
     private int pageSize;
 
     public PageResult() {

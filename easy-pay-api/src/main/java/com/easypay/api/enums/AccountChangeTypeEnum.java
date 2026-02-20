@@ -1,5 +1,8 @@
 package com.easypay.api.enums;
 
+/**
+ * 账户变动类型枚举
+ */
 public enum AccountChangeTypeEnum {
     INCOME((byte) 1, "收入"),
     EXPENSE((byte) 2, "支出"),

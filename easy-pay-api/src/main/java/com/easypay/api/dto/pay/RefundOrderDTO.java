@@ -3,28 +3,50 @@ package com.easypay.api.dto.pay;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
+/**
+ * 退款订单数据传输对象
+ */
 public class RefundOrderDTO implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
+    // 退款订单号
     private String refundOrderId;
+    // 原支付订单号
     private String payOrderId;
+    // 商户编号
     private String mchNo;
+    // 应用ID
     private String appId;
+    // 商户退款单号
     private String mchRefundNo;
+    // 原支付金额（单位：分）
     private Long payAmount;
+    // 退款金额（单位：分）
     private Long refundAmount;
+    // 币种
     private String currency;
+    // 退款状态
     private Byte state;
+    // 渠道订单号
     private String channelOrderNo;
+    // 渠道退款单号
     private String channelRefundNo;
+    // 退款原因
     private String reason;
+    // 错误码
     private String errCode;
+    // 错误信息
     private String errMsg;
+    // 异步通知地址
     private String notifyUrl;
+    // 扩展参数
     private String extParam;
+    // 退款成功时间
     private LocalDateTime successTime;
+    // 创建时间
     private LocalDateTime createdAt;
+    // 更新时间
     private LocalDateTime updatedAt;
 
     public RefundOrderDTO() {

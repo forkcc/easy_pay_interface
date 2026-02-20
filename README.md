@@ -67,10 +67,11 @@ flowchart TB
 
 ## Modules / 模块说明
 
-| Module | Description |
-|--------|-------------|
-| **easy-pay-api** | Interface JAR for consumers. Contains DTOs, service interfaces, enums, and common result types. |
-| **easy-pay-provider** | Deployable fat JAR. Contains Entity, Repository, Service implementations, Flyway migrations, and Dubbo provider configuration. |
+| Module | Type | Description |
+|--------|------|-------------|
+| **easy-pay-api** | JAR (依赖) | 消费者共享接口包：DTO、Service 接口、枚举、通用返回类型 / Interface JAR for consumers: DTOs, service interfaces, enums, and result types. |
+| **easy-pay-provider** | Fat JAR (部署) | 数据服务提供者：Entity、Repository、Service 实现、Flyway 迁移 / Data service provider: Entity, Repository, Service impl, Flyway migrations. |
+| **easy-pay-task** | Fat JAR (部署) | 定时任务调度器（Dubbo 消费者）：订单过期、通知重试、每日统计、自动结算 / Scheduled task runner (Dubbo consumer): order expire, notify retry, daily stat, auto settle. |
 
 ---
 
@@ -118,14 +119,19 @@ Configure via environment variables:
 | `ZK_PORT` | ZooKeeper port | `2181` |
 | `DUBBO_PORT` | Dubbo provider port | `20880` |
 | `DUBBO_TOKEN` | Dubbo token for consumer auth | `easy-pay-secret-token` |
+| `TASK_ENABLED` | 定时任务总开关 (task module) | `true` |
 
 ### Run / 运行
 
 ```bash
+# 启动数据服务 Provider
 java -jar easy-pay-provider/target/easy-pay-provider.jar
+
+# 启动定时任务 (独立进程)
+java -jar easy-pay-task/target/easy-pay-task.jar
 ```
 
-Flyway runs automatically on first start and migrates the schema.
+Flyway runs automatically on first provider start and migrates the schema.
 
 ---
 
@@ -133,8 +139,23 @@ Flyway runs automatically on first start and migrates the schema.
 
 Flyway is used for database versioning. Migration scripts are under `easy-pay-provider/src/main/resources/db/migration/`.
 
-- **Naming**: `V{n}__{description}.sql` (e.g. `V1__init_schema.sql`, `V2__init_data.sql`)
-- **Rule**: Never modify released migration scripts. Add new `V{n+1}__*.sql` for schema or data changes.
+Migration scripts (10 files, split by domain):
+
+| Version | File | Description |
+|---------|------|-------------|
+| V1 | `create_mch_tables.sql` | 商户域 3 张表 |
+| V2 | `create_pay_order_tables.sql` | 支付订单 3 张表 (t_pay_order 按月分区) |
+| V3 | `create_pay_channel_tables.sql` | 支付通道 5 张表 |
+| V4 | `create_agent_tables.sql` | 代理商域 2 张表 |
+| V5 | `create_account_tables.sql` | 账户结算 4 张表 |
+| V6 | `create_stat_tables.sql` | 统计预聚合 1 张表 |
+| V7 | `create_sys_user_tables.sql` | 系统用户+RBAC 5 张表 |
+| V8 | `create_sys_config_tables.sql` | 系统配置+日志 2 张表 |
+| V9 | `init_pay_data.sql` | 支付方式+接口定义 |
+| V10 | `init_sys_data.sql` | 系统配置+管理员 |
+
+- **Naming**: `V{n}__{description}.sql`
+- **Rule**: Never modify released migration scripts. Add new `V{n+1}__*.sql` for changes.
 
 ---
 
@@ -177,29 +198,36 @@ dubbo:
 
 ```
 easy-pay-interface/
-├── pom.xml
-├── easy-pay-api/
+├── pom.xml                          # 父 POM (multi-module)
+├── easy-pay-api/                    # 接口模块 (消费者依赖)
 │   ├── pom.xml
 │   └── src/main/java/com/easypay/api/
-│       ├── dto/           # DTOs by domain
-│       ├── enums/         # Enums
-│       ├── result/        # PageResult, etc.
-│       └── service/       # Interface definitions
-├── easy-pay-provider/
+│       ├── dto/                     # 6 域 24 个 DTO
+│       ├── enums/                   # 11 个枚举
+│       ├── result/                  # PageResult
+│       └── service/                 # 15 个 Dubbo 接口
+├── easy-pay-provider/               # 数据服务 (Dubbo Provider)
 │   ├── pom.xml
 │   └── src/main/
 │       ├── java/com/easypay/provider/
-│       │   ├── config/
-│       │   ├── converter/
-│       │   ├── entity/
-│       │   ├── repository/
-│       │   ├── service/impl/
+│       │   ├── config/              # JPA、事务配置
+│       │   ├── converter/           # Entity ↔ DTO 转换器
+│       │   ├── entity/              # 25 个 JPA 实体
+│       │   ├── repository/          # 25 个 JPA Repository
+│       │   ├── service/impl/        # 15 个 @DubboService 实现
 │       │   └── EasyPayProviderApplication.java
 │       └── resources/
 │           ├── application.yml
-│           └── db/migration/
-│               ├── V1__init_schema.sql
-│               └── V2__init_data.sql
+│           └── db/migration/        # Flyway V1~V10
+├── easy-pay-task/                   # 定时任务 (Dubbo Consumer)
+│   ├── pom.xml
+│   └── src/main/
+│       ├── java/com/easypay/task/
+│       │   ├── config/              # 调度线程池、任务参数
+│       │   ├── job/                 # 4 个定时任务
+│       │   └── EasyPayTaskApplication.java
+│       └── resources/
+│           └── application.yml
 ├── README.md
 ├── LICENSE
 └── CHANGELOG.md

@@ -1,12 +1,12 @@
 # 预构建模式：先在本机执行 mvn clean package -DskipTests，再 docker compose up -d --build
-# 不依赖网络拉取 maven 镜像
 
 FROM eclipse-temurin:21-jdk AS provider
 
-RUN groupadd -r app && useradd -r -g app app
+RUN groupadd -r app && useradd -r -g app -m -d /home/app app && \
+    mkdir -p /home/app/.dubbo && chown -R app:app /home/app
 WORKDIR /app
 COPY easy-pay-provider/target/easy-pay-provider.jar app.jar
-RUN chown -R app:app /app
+RUN chown app:app app.jar
 USER app
 
 EXPOSE 20880
@@ -18,10 +18,11 @@ ENTRYPOINT ["java", \
 
 FROM eclipse-temurin:21-jdk AS task
 
-RUN groupadd -r app && useradd -r -g app app
+RUN groupadd -r app && useradd -r -g app -m -d /home/app app && \
+    mkdir -p /home/app/.dubbo && chown -R app:app /home/app
 WORKDIR /app
 COPY easy-pay-task/target/easy-pay-task.jar app.jar
-RUN chown -R app:app /app
+RUN chown app:app app.jar
 USER app
 
 ENTRYPOINT ["java", \

@@ -1,7 +1,16 @@
 # ============================
 # 第一阶段：Maven 构建
+# 基于已有的 eclipse-temurin:21-jdk，手动安装 Maven
 # ============================
-FROM maven:3.9-eclipse-temurin-21 AS builder
+FROM eclipse-temurin:21-jdk AS builder
+
+ARG MAVEN_VERSION=3.9.9
+RUN apt-get update && apt-get install -y --no-install-recommends curl && \
+    curl -fsSL https://dlcdn.apache.org/maven/maven-3/${MAVEN_VERSION}/binaries/apache-maven-${MAVEN_VERSION}-bin.tar.gz \
+    | tar xz -C /opt && \
+    ln -s /opt/apache-maven-${MAVEN_VERSION}/bin/mvn /usr/bin/mvn && \
+    apt-get purge -y curl && apt-get autoremove -y && rm -rf /var/lib/apt/lists/*
+
 WORKDIR /build
 
 COPY pom.xml .
@@ -18,7 +27,7 @@ RUN mvn clean package -DskipTests -B -q
 # ============================
 # 第二阶段：Provider 运行环境
 # ============================
-FROM eclipse-temurin:21-jre AS provider
+FROM eclipse-temurin:21-jdk AS provider
 
 RUN groupadd -r app && useradd -r -g app app
 WORKDIR /app
@@ -37,7 +46,7 @@ ENTRYPOINT ["java", \
 # ============================
 # 第三阶段：Task 运行环境
 # ============================
-FROM eclipse-temurin:21-jre AS task
+FROM eclipse-temurin:21-jdk AS task
 
 RUN groupadd -r app && useradd -r -g app app
 WORKDIR /app

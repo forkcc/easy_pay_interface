@@ -1,5 +1,5 @@
 # ============================
-# Stage 1: Maven build
+# 第一阶段：Maven 构建
 # ============================
 FROM maven:3.9-eclipse-temurin-21 AS builder
 WORKDIR /build
@@ -16,7 +16,7 @@ COPY easy-pay-task/ easy-pay-task/
 RUN mvn clean package -DskipTests -B -q
 
 # ============================
-# Stage 2: Provider runtime
+# 第二阶段：Provider 运行环境
 # ============================
 FROM eclipse-temurin:21-jre-alpine AS provider
 LABEL maintainer="easypay" description="Easy Pay Dubbo Provider"
@@ -36,7 +36,7 @@ ENTRYPOINT ["java", \
   "-jar", "app.jar"]
 
 # ============================
-# Stage 3: Task runtime
+# 第三阶段：Task 运行环境
 # ============================
 FROM eclipse-temurin:21-jre-alpine AS task
 LABEL maintainer="easypay" description="Easy Pay Scheduled Task Runner"

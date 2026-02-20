@@ -18,10 +18,9 @@ RUN mvn clean package -DskipTests -B -q
 # ============================
 # 第二阶段：Provider 运行环境
 # ============================
-FROM eclipse-temurin:21-jre-alpine AS provider
-LABEL maintainer="easypay" description="Easy Pay Dubbo Provider"
+FROM eclipse-temurin:21-jre AS provider
 
-RUN addgroup -S app && adduser -S app -G app
+RUN groupadd -r app && useradd -r -g app app
 WORKDIR /app
 
 COPY --from=builder /build/easy-pay-provider/target/easy-pay-provider.jar app.jar
@@ -38,10 +37,9 @@ ENTRYPOINT ["java", \
 # ============================
 # 第三阶段：Task 运行环境
 # ============================
-FROM eclipse-temurin:21-jre-alpine AS task
-LABEL maintainer="easypay" description="Easy Pay Scheduled Task Runner"
+FROM eclipse-temurin:21-jre AS task
 
-RUN addgroup -S app && adduser -S app -G app
+RUN groupadd -r app && useradd -r -g app app
 WORKDIR /app
 
 COPY --from=builder /build/easy-pay-task/target/easy-pay-task.jar app.jar

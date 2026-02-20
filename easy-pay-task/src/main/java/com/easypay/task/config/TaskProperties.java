@@ -3,6 +3,12 @@ package com.easypay.task.config;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
 
+/**
+ * 定时任务配置属性
+ *
+ * <p>读取 {@code easypay.task} 前缀的配置项，包括全局开关、
+ * 各任务的 cron 表达式和批次大小等参数。</p>
+ */
 @Component
 @ConfigurationProperties(prefix = "easypay.task")
 public class TaskProperties {
@@ -54,6 +60,7 @@ public class TaskProperties {
         this.autoSettle = autoSettle;
     }
 
+    /** 订单过期关闭任务配置 */
     public static class OrderExpire {
         private String cron = "0 */5 * * * ?";
         private int batchSize = 200;
@@ -75,6 +82,7 @@ public class TaskProperties {
         }
     }
 
+    /** 商户通知重试任务配置 */
     public static class NotifyRetry {
         private String cron = "0 */1 * * * ?";
         private int batchSize = 100;
@@ -96,6 +104,7 @@ public class TaskProperties {
         }
     }
 
+    /** 每日统计聚合任务配置 */
     public static class DailyStat {
         private String cron = "0 5 0 * * ?";
 
@@ -108,6 +117,7 @@ public class TaskProperties {
         }
     }
 
+    /** 自动结算任务配置 */
     public static class AutoSettle {
         private String cron = "0 30 2 * * ?";
         private int batchSize = 100;

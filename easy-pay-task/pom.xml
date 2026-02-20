@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>com.easypay</groupId>
+        <artifactId>easy-pay-interface</artifactId>
+        <version>1.0.0</version>
+    </parent>
+
+    <artifactId>easy-pay-task</artifactId>
+    <packaging>jar</packaging>
+
+    <name>Easy Pay Task</name>
+    <description>Scheduled task module - Dubbo consumer for periodic jobs (order expire, notify retry, daily stat, auto settle)</description>
+
+    <dependencies>
+        <dependency>
+            <groupId>com.easypay</groupId>
+            <artifactId>easy-pay-api</artifactId>
+        </dependency>
+
+        <!-- Spring Boot (NO web starter) -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter</artifactId>
+        </dependency>
+
+        <!-- Dubbo -->
+        <dependency>
+            <groupId>org.apache.dubbo</groupId>
+            <artifactId>dubbo-spring-boot-starter</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.dubbo</groupId>
+            <artifactId>dubbo</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.dubbo</groupId>
+            <artifactId>dubbo-dependencies-zookeeper-curator5</artifactId>
+            <type>pom</type>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+                <configuration>
+                    <finalName>easy-pay-task</finalName>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
+</project>

@@ -30,6 +30,7 @@
     <modules>
         <module>easy-pay-api</module>
         <module>easy-pay-provider</module>
+        <module>easy-pay-task</module>
     </modules>
 
     <properties>

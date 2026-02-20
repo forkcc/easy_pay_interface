@@ -1,0 +1,38 @@
+spring:
+  application:
+    name: easy-pay-task
+
+dubbo:
+  application:
+    name: easy-pay-task
+    qos-enable: false
+  registry:
+    address: zookeeper://${ZK_HOST:127.0.0.1}:${ZK_PORT:2181}
+    timeout: 10000
+  consumer:
+    timeout: 30000
+    retries: 0
+    check: false
+    token: ${DUBBO_TOKEN:easy-pay-secret-token}
+
+# ---------- 定时任务开关与参数 ----------
+easypay:
+  task:
+    enabled: ${TASK_ENABLED:true}
+    order-expire:
+      cron: "0 */5 * * * ?"
+      batch-size: 200
+    notify-retry:
+      cron: "0 */1 * * * ?"
+      batch-size: 100
+    daily-stat:
+      cron: "0 5 0 * * ?"
+    auto-settle:
+      cron: "0 30 2 * * ?"
+      batch-size: 100
+
+logging:
+  level:
+    root: INFO
+    com.easypay: DEBUG
+    org.apache.dubbo: WARN

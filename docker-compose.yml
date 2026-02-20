@@ -1,5 +1,3 @@
-version: "3.9"
-
 services:
 
   # ==================== 基础设施 ====================
@@ -48,7 +46,7 @@ services:
       - easypay
 
   zookeeper:
-    image: zookeeper:3.9
+    image: zookeeper:3.8
     container_name: easypay-zookeeper
     restart: unless-stopped
     environment:

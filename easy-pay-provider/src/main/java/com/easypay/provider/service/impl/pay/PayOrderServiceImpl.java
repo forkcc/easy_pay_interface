@@ -18,6 +18,9 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * 支付订单服务实现，实现 {@link IPayOrderService} 接口，提供支付订单的创建、状态流转、查询及统计功能
+ */
 @DubboService
 public class PayOrderServiceImpl implements IPayOrderService {
 

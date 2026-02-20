@@ -2,6 +2,9 @@ package com.easypay.provider.config;
 
 import java.time.Duration;
 
+/**
+ * 缓存常量定义，集中管理缓存名称和过期时间
+ */
 public final class CacheConstants {
 
     private CacheConstants() {}

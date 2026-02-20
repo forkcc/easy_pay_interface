@@ -17,6 +17,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
+/**
+ * 系统配置服务实现，实现 {@link ISysConfigService} 接口，提供系统配置项的增删改查及操作日志管理功能
+ */
 @DubboService
 public class SysConfigServiceImpl implements ISysConfigService {
 

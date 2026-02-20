@@ -15,6 +15,9 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * 统计服务实现，实现 {@link IStatService} 接口，提供物化视图刷新、每日交易统计查询及汇总功能
+ */
 @DubboService
 public class StatServiceImpl implements IStatService {
 
@@ -39,10 +42,10 @@ public class StatServiceImpl implements IStatService {
                         "REFRESH MATERIALIZED VIEW CONCURRENTLY " + view
                 ).executeUpdate();
             }
-            log.info("Refreshed all {} materialized views (triggered for date: {})", MATERIALIZED_VIEWS.length, date);
+            log.info("已刷新全部 {} 个物化视图（触发日期：{}）", MATERIALIZED_VIEWS.length, date);
             return true;
         } catch (Exception e) {
-            log.error("Failed to refresh materialized views", e);
+            log.error("刷新物化视图失败", e);
             return false;
         }
     }

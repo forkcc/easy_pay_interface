@@ -16,6 +16,9 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
 import java.util.List;
 
+/**
+ * 商户通知服务实现，实现 {@link IMchNotifyService} 接口，提供商户回调通知的创建、状态更新及待通知查询功能
+ */
 @DubboService
 public class MchNotifyServiceImpl implements IMchNotifyService {
 

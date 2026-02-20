@@ -17,6 +17,9 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
 import java.util.List;
 
+/**
+ * 退款订单服务实现，实现 {@link IRefundOrderService} 接口，提供退款订单的创建、状态更新及分页查询功能
+ */
 @DubboService
 public class RefundOrderServiceImpl implements IRefundOrderService {
 

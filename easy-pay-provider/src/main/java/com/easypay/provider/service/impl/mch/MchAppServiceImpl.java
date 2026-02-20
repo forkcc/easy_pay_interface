@@ -19,6 +19,9 @@ import java.util.UUID;
 
 import static com.easypay.provider.config.CacheConstants.MCH_APP;
 
+/**
+ * 商户应用服务实现，实现 {@link IMchAppService} 接口，提供商户应用的创建、更新、删除及密钥重置功能
+ */
 @DubboService
 public class MchAppServiceImpl implements IMchAppService {
 

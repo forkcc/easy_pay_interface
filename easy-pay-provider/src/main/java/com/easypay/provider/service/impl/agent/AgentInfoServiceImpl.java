@@ -16,6 +16,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
+/**
+ * 代理商信息服务实现，实现 {@link IAgentInfoService} 接口，提供代理商的增删改查及分页功能
+ */
 @DubboService
 public class AgentInfoServiceImpl implements IAgentInfoService {
 

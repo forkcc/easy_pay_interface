@@ -20,6 +20,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * 系统权限服务实现，实现 {@link ISysAuthService} 接口，提供角色、权限资源的管理以及用户角色和角色权限的分配功能
+ */
 @DubboService
 public class SysAuthServiceImpl implements ISysAuthService {
 

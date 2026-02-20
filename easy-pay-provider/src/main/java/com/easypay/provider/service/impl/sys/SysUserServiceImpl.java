@@ -16,6 +16,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
+/**
+ * 系统用户服务实现，实现 {@link ISysUserService} 接口，提供系统用户的创建、更新、删除、密码修改及分页查询功能
+ */
 @DubboService
 public class SysUserServiceImpl implements ISysUserService {
 

@@ -20,6 +20,9 @@ import java.util.List;
 
 import static com.easypay.provider.config.CacheConstants.MCH_INFO;
 
+/**
+ * 商户信息服务实现，实现 {@link IMchInfoService} 接口，提供商户的增删改查及分页功能
+ */
 @DubboService
 public class MchInfoServiceImpl implements IMchInfoService {
 

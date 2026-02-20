@@ -29,6 +29,9 @@ import java.util.Optional;
 
 import static com.easypay.provider.config.CacheConstants.*;
 
+/**
+ * 支付通道服务实现，实现 {@link IPayPassageService} 接口，提供支付通道、支付方式、支付接口定义与配置、商户支付通道的管理功能
+ */
 @DubboService
 public class PayPassageServiceImpl implements IPayPassageService {
 

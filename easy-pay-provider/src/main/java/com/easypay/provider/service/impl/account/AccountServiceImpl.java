@@ -18,6 +18,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
+/**
+ * 账户服务实现，实现 {@link IAccountService} 接口，提供账户初始化、余额变更、冻结/解冻及账户流水查询功能
+ */
 @DubboService
 public class AccountServiceImpl implements IAccountService {
 

@@ -14,6 +14,9 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+/**
+ * 账户域对象转换器，负责账户余额、账户流水、结算记录、结算银行账户等实体与对应 DTO 之间的相互转换
+ */
 @Component
 public class AccountConverter {
 

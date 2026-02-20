@@ -16,6 +16,9 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+/**
+ * 系统域对象转换器，负责系统用户、角色、权限、配置、日志等实体与对应 DTO 之间的相互转换
+ */
 @Component
 public class SysConverter {
 

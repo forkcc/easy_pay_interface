@@ -23,6 +23,9 @@ import java.util.Map;
 
 import static com.easypay.provider.config.CacheConstants.*;
 
+/**
+ * Redis 缓存配置，定义 RedisTemplate 序列化方式及各业务缓存的过期策略
+ */
 @Configuration
 @EnableCaching
 public class RedisConfig {

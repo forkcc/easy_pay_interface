@@ -19,6 +19,9 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
 import java.util.List;
 
+/**
+ * 结算服务实现，实现 {@link ISettService} 接口，提供结算记录和结算银行账户的管理功能
+ */
 @DubboService
 public class SettServiceImpl implements ISettService {
 

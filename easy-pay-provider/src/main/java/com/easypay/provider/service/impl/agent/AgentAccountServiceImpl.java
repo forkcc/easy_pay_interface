@@ -9,6 +9,9 @@ import jakarta.annotation.Resource;
 import org.apache.dubbo.config.annotation.DubboService;
 import org.springframework.transaction.annotation.Transactional;
 
+/**
+ * 代理商账户服务实现，实现 {@link IAgentAccountService} 接口，提供代理商账户的初始化、余额变更、冻结与解冻功能
+ */
 @DubboService
 public class AgentAccountServiceImpl implements IAgentAccountService {
 

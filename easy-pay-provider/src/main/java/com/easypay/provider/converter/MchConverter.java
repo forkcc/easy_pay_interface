@@ -12,6 +12,9 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+/**
+ * 商户域对象转换器，负责 MchInfo、MchApp、MchNotify 实体与对应 DTO 之间的相互转换
+ */
 @Component
 public class MchConverter {
 

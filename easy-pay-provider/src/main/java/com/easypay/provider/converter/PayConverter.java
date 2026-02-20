@@ -22,6 +22,9 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+/**
+ * 支付域对象转换器，负责支付订单、退款订单、转账订单、支付通道、支付方式、支付接口等实体与对应 DTO 之间的相互转换
+ */
 @Component
 public class PayConverter {
 

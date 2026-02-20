@@ -1,8 +1,8 @@
 # Easy Pay Interface
 
-Easy Pay Interface 是一个基于 Spring Boot + Apache Dubbo 的开源支付平台数据服务提供者。消费者通过 Dubbo 远程调用获取商户、支付、代理、结算、统计及系统管理能力，Provider 端采用 JPA + Flyway 管理 MySQL 数据，支持 Token 认证与表分区。
+Easy Pay Interface 是一个基于 Spring Boot + Apache Dubbo 的开源支付平台数据服务提供者。消费者通过 Dubbo 远程调用获取商户、支付、代理、结算、统计及系统管理能力，Provider 端采用 JPA + Flyway 管理 PostgreSQL 数据，支持 Token 认证、表分区与物化视图统计。
 
-Easy Pay Interface is an open-source payment platform data service provider built on Spring Boot and Apache Dubbo. Consumers invoke Dubbo RPC to access merchant, payment, agent, settlement, statistics, and system management capabilities. The provider uses JPA and Flyway for MySQL persistence, with Token authentication and table partitioning support.
+Easy Pay Interface is an open-source payment platform data service provider built on Spring Boot and Apache Dubbo. Consumers invoke Dubbo RPC to access merchant, payment, agent, settlement, statistics, and system management capabilities. The provider uses JPA and Flyway for PostgreSQL persistence, with Token authentication, table partitioning, and materialized view statistics.
 
 ---
 
@@ -30,7 +30,7 @@ flowchart TB
     end
 
     subgraph Storage["Storage"]
-        mysql[(MySQL<br/>Partitioned)]
+        pg[(PostgreSQL<br/>Partitioned + MV)]
     end
 
     manage --> api[easy-pay-api.jar]
@@ -42,8 +42,8 @@ flowchart TB
     api -.->|Dubbo RPC| zk
     Provider -.->|register| zk
     Provider --> jpa
-    jpa --> mysql
-    flyway --> mysql
+    jpa --> pg
+    flyway --> pg
     token --> domains
 ```
 
@@ -57,7 +57,7 @@ flowchart TB
 | Spring Boot | 3.2.x |
 | Apache Dubbo | 3.2.x |
 | Spring Data JPA | (via Spring Boot) |
-| MySQL | 8.0+ |
+| PostgreSQL | 15+ |
 | Flyway | 10.x |
 | ZooKeeper | 3.8+ |
 | HikariCP | 5.x |
@@ -71,21 +71,36 @@ flowchart TB
 |--------|------|-------------|
 | **easy-pay-api** | JAR (依赖) | 消费者共享接口包：DTO、Service 接口、枚举、通用返回类型 / Interface JAR for consumers: DTOs, service interfaces, enums, and result types. |
 | **easy-pay-provider** | Fat JAR (部署) | 数据服务提供者：Entity、Repository、Service 实现、Flyway 迁移 / Data service provider: Entity, Repository, Service impl, Flyway migrations. |
-| **easy-pay-task** | Fat JAR (部署) | 定时任务调度器（Dubbo 消费者）：订单过期、通知重试、每日统计、自动结算 / Scheduled task runner (Dubbo consumer): order expire, notify retry, daily stat, auto settle. |
+| **easy-pay-task** | Fat JAR (部署) | 定时任务调度器（Dubbo 消费者）：订单过期、通知重试、视图刷新、自动结算 / Scheduled task runner (Dubbo consumer): order expire, notify retry, view refresh, auto settle. |
 
 ---
 
 ## Business Domains / 业务域
 
-| Domain | Tables | Interfaces |
-|--------|--------|------------|
-| 商户管理 (Merchant) | 3 | 3 |
-| 支付管理 (Payment) | 8 | 4 |
-| 代理管理 (Agent) | 2 | 2 |
-| 账户结算 (Account/Settlement) | 4 | 2 |
-| 数据统计 (Statistics) | 1 | 1 |
-| 系统管理 (System) | 7 | 3 |
-| **Total** | **25** | **15** |
+| Domain | Tables | Views | Interfaces |
+|--------|--------|-------|------------|
+| 商户管理 (Merchant) | 3 | — | 3 |
+| 支付管理 (Payment) | 8 | — | 4 |
+| 代理管理 (Agent) | 2 | — | 2 |
+| 账户结算 (Account/Settlement) | 4 | — | 2 |
+| 数据统计 (Statistics) | — | 4 MV | 1 |
+| 系统管理 (System) | 7 | — | 3 |
+| **Total** | **24** | **4 MV** | **15** |
+
+---
+
+## Materialized Views / 物化视图
+
+统计查询完全基于 PostgreSQL 物化视图，避免实时聚合 2000 万级 `t_pay_order`：
+
+| View | Description | Refresh |
+|------|-------------|---------|
+| `mv_order_stat_daily` | 每日订单统计（按日期+商户+代理+支付方式） | `CONCURRENTLY` |
+| `mv_order_stat_mch` | 商户级订单汇总 | `CONCURRENTLY` |
+| `mv_order_stat_way` | 支付方式级订单汇总 | `CONCURRENTLY` |
+| `mv_order_stat_platform_daily` | 平台每日汇总（运营总览） | `CONCURRENTLY` |
+
+定时任务 `DailyStatJob` 每天 00:05 自动 `REFRESH MATERIALIZED VIEW CONCURRENTLY` 刷新全部视图。
 
 ---
 
@@ -95,7 +110,7 @@ flowchart TB
 
 - JDK 21+
 - Maven 3.9+
-- MySQL 8.0+
+- PostgreSQL 15+
 - ZooKeeper 3.8+
 
 ### Build / 构建
@@ -110,11 +125,12 @@ Configure via environment variables:
 
 | Variable | Description | Default |
 |----------|-------------|---------|
-| `MYSQL_HOST` | MySQL host | `127.0.0.1` |
-| `MYSQL_PORT` | MySQL port | `3306` |
-| `MYSQL_DB` | Database name | `easy_pay` |
-| `MYSQL_USER` | MySQL user | `root` |
-| `MYSQL_PASSWORD` | MySQL password | `root` |
+| `PG_HOST` | PostgreSQL host | `127.0.0.1` |
+| `PG_PORT` | PostgreSQL port | `5432` |
+| `PG_DB` | Database name | `easy_pay` |
+| `PG_SCHEMA` | Schema name | `public` |
+| `PG_USER` | PostgreSQL user | `postgres` |
+| `PG_PASSWORD` | PostgreSQL password | `postgres` |
 | `ZK_HOST` | ZooKeeper host | `127.0.0.1` |
 | `ZK_PORT` | ZooKeeper port | `2181` |
 | `DUBBO_PORT` | Dubbo provider port | `20880` |
@@ -139,20 +155,21 @@ Flyway runs automatically on first provider start and migrates the schema.
 
 Flyway is used for database versioning. Migration scripts are under `easy-pay-provider/src/main/resources/db/migration/`.
 
-Migration scripts (10 files, split by domain):
+Migration scripts (11 files, split by domain):
 
 | Version | File | Description |
 |---------|------|-------------|
-| V1 | `create_mch_tables.sql` | 商户域 3 张表 |
-| V2 | `create_pay_order_tables.sql` | 支付订单 3 张表 (t_pay_order 按月分区) |
-| V3 | `create_pay_channel_tables.sql` | 支付通道 5 张表 |
-| V4 | `create_agent_tables.sql` | 代理商域 2 张表 |
-| V5 | `create_account_tables.sql` | 账户结算 4 张表 |
-| V6 | `create_stat_tables.sql` | 统计预聚合 1 张表 |
+| V1 | `create_common_functions.sql` | 公共触发器函数 `update_updated_at()` |
+| V2 | `create_mch_tables.sql` | 商户域 3 张表 |
+| V3 | `create_pay_order_tables.sql` | 支付订单 3 张表 (t_pay_order 按月分区) |
+| V4 | `create_pay_channel_tables.sql` | 支付通道 5 张表 |
+| V5 | `create_agent_tables.sql` | 代理商域 2 张表 |
+| V6 | `create_account_tables.sql` | 账户结算 4 张表 |
 | V7 | `create_sys_user_tables.sql` | 系统用户+RBAC 5 张表 |
 | V8 | `create_sys_config_tables.sql` | 系统配置+日志 2 张表 |
-| V9 | `init_pay_data.sql` | 支付方式+接口定义 |
-| V10 | `init_sys_data.sql` | 系统配置+管理员 |
+| V9 | `create_stat_materialized_views.sql` | 4 个统计物化视图 |
+| V10 | `init_pay_data.sql` | 支付方式+接口定义 |
+| V11 | `init_sys_data.sql` | 系统配置+管理员 |
 
 - **Naming**: `V{n}__{description}.sql`
 - **Rule**: Never modify released migration scripts. Add new `V{n+1}__*.sql` for changes.
@@ -212,13 +229,13 @@ easy-pay-interface/
 │       ├── java/com/easypay/provider/
 │       │   ├── config/              # JPA、事务配置
 │       │   ├── converter/           # Entity ↔ DTO 转换器
-│       │   ├── entity/              # 25 个 JPA 实体
-│       │   ├── repository/          # 25 个 JPA Repository
+│       │   ├── entity/              # 24 个 JPA 实体
+│       │   ├── repository/          # 24 个 JPA Repository
 │       │   ├── service/impl/        # 15 个 @DubboService 实现
 │       │   └── EasyPayProviderApplication.java
 │       └── resources/
 │           ├── application.yml
-│           └── db/migration/        # Flyway V1~V10
+│           └── db/migration/        # Flyway V1~V11
 ├── easy-pay-task/                   # 定时任务 (Dubbo Consumer)
 │   ├── pom.xml
 │   └── src/main/

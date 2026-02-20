@@ -1,0 +1,59 @@
+spring:
+  application:
+    name: easy-pay-provider
+
+  datasource:
+    url: jdbc:mysql://${MYSQL_HOST:127.0.0.1}:${MYSQL_PORT:3306}/${MYSQL_DB:easy_pay}?useUnicode=true&characterEncoding=utf-8&useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=Asia/Shanghai
+    username: ${MYSQL_USER:root}
+    password: ${MYSQL_PASSWORD:root}
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    hikari:
+      maximum-pool-size: 30
+      minimum-idle: 10
+      connection-timeout: 5000
+      idle-timeout: 300000
+      max-lifetime: 900000
+
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    show-sql: false
+    open-in-view: false
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQLDialect
+        format_sql: false
+        jdbc:
+          batch_size: 50
+        order_inserts: true
+        order_updates: true
+
+  flyway:
+    enabled: true
+    locations: classpath:db/migration
+    baseline-on-migrate: true
+    baseline-version: 0
+    validate-on-migrate: true
+    out-of-order: false
+    table: flyway_schema_history
+
+dubbo:
+  application:
+    name: easy-pay-provider
+    qos-enable: false
+  registry:
+    address: zookeeper://${ZK_HOST:127.0.0.1}:${ZK_PORT:2181}
+    timeout: 10000
+  protocol:
+    name: dubbo
+    port: ${DUBBO_PORT:20880}
+  provider:
+    token: ${DUBBO_TOKEN:easy-pay-secret-token}
+    timeout: 5000
+    retries: 0
+
+logging:
+  level:
+    root: INFO
+    com.easypay: DEBUG
+    org.apache.dubbo: WARN

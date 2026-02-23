@@ -1,0 +1,24 @@
+# Go
+*.exe
+*.test
+vendor/
+
+# IDE
+.idea/
+.vscode/
+
+# Logs
+*.log
+logs/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# App
+.env
+*.local.yaml
+
+# Build output
+/bot
+/easy_pay_interface

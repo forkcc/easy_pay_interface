@@ -28,7 +28,7 @@ migrations/   建表与变更 SQL（001～007，PostgreSQL）
 ```bash
 go mod tidy
 
-# 建库后按顺序执行 migrations/001_schema.sql ～ 007_admin_agent_audit.sql
+# 建库后按顺序执行 migrations/001_schema.sql 至 007_admin_agent_audit.sql
 
 # 启动 API（默认 :8080）
 export DB_DSN="host=localhost user=postgres password=postgres dbname=easy_pay port=5432 sslmode=disable TimeZone=Asia/Shanghai"

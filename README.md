@@ -18,11 +18,13 @@ cmd/
   merchant  商户模块 Dubbo 服务（默认端口 20001）
   agent     代理模块 Dubbo 服务（默认端口 20002）
   payment   支付模块 Dubbo 服务（默认端口 20003）
+  manager   管理端模块 Dubbo 服务（默认端口 20004）
   bot       Telegram Bot
   job       周期任务（通知重试、对账等）
 internal/
   config    配置（环境变量）
-  rpc       Dubbo 服务实现（MerchantProvider / AgentProvider / PaymentProvider）
+  rpc       Dubbo 服务实现（MerchantProvider / AgentProvider / PaymentProvider / ManagerProvider）
+  repository 数据访问（merchant / agent / payment / manager）
   rabbitmq  RabbitMQ 连接
   redis     Redis 客户端
 ```
@@ -44,8 +46,9 @@ export REDIS_ADDR="localhost:6379"
 
 # 各模块单独启动（多机部署时每台设不同 DUBBO_PORT）
 go run ./cmd/merchant   # 商户 Dubbo，默认 :20001
-go run ./cmd/agent     # 代理 Dubbo，默认 :20002
+go run ./cmd/agent      # 代理 Dubbo，默认 :20002
 go run ./cmd/payment    # 支付 Dubbo，默认 :20003
+go run ./cmd/manager    # 管理端 Dubbo，默认 :20004
 go run ./cmd/bot        # Telegram Bot
 go run ./cmd/job        # 周期任务
 ```

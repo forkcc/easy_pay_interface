@@ -1,4 +1,4 @@
-// 支付模块：仅暴露 Dubbo 接口，独立进程。参考 Jeepay 支付网关 / Roncoo 支付网关。
+// 管理端模块：仅暴露 Dubbo 接口，独立进程。参考 Jeepay / 龙果 管理后台。
 package main
 
 import (
@@ -15,16 +15,16 @@ import (
 func main() {
 	cfg := config.Load()
 	if err := db.Init(cfg.DBDSN); err != nil {
-		log.Fatal("payment: db init: ", err)
+		log.Fatal("manager: db init: ", err)
 	}
-	port := 20003
+	port := 20004
 	if p := os.Getenv("DUBBO_PORT"); p != "" {
 		if v, err := strconv.Atoi(p); err == nil && v > 0 {
 			port = v
 		}
 	}
-	log.Printf("payment: Dubbo port %d, zk=%s", port, cfg.ZookeeperAddr)
-	if err := rpc.StartPayment(port, cfg.ZookeeperAddr); err != nil {
-		log.Fatal("payment: ", err)
+	log.Printf("manager: Dubbo port %d, zk=%s", port, cfg.ZookeeperAddr)
+	if err := rpc.StartManager(port, cfg.ZookeeperAddr); err != nil {
+		log.Fatal("manager: ", err)
 	}
 }

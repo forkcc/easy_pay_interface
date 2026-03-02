@@ -48,6 +48,22 @@ services:
       - REDIS_DB=${REDIS_DB:-0}
     restart: unless-stopped
 
+  manager:
+    build:
+      context: .
+      args:
+        CMD: manager
+    network_mode: host
+    environment:
+      - DUBBO_PORT=20004
+      - ZK_ADDR=${ZK_ADDR:-127.0.0.1:2181}
+      - DB_DSN=${DB_DSN:-host=localhost user=postgres password=postgres dbname=easy_pay port=5432 sslmode=disable TimeZone=Asia/Shanghai}
+      - RABBITMQ_URL=${RABBITMQ_URL:-amqp://guest:guest@localhost:5672/}
+      - REDIS_ADDR=${REDIS_ADDR:-localhost:6379}
+      - REDIS_PASSWORD=${REDIS_PASSWORD:-}
+      - REDIS_DB=${REDIS_DB:-0}
+    restart: unless-stopped
+
   bot:
     build:
       context: .

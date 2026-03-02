@@ -1,36 +1,32 @@
+// bot 模块：Telegram Bot，独立运行。
 package main
 
 import (
-	"context"
 	"log"
-	"os"
-	"os/signal"
-	"syscall"
 
-	"github.com/easypay/easy_pay_interface/internal/app"
-	"github.com/easypay/easy_pay_interface/internal/bot"
+	"github.com/easypay/easy_pay_interface/internal/config"
+	tgbotapi "github.com/go-telegram-bot-api/telegram-bot-api/v5"
 )
 
 func main() {
-	cfg := bot.LoadConfig()
-	if cfg.Token == "" {
-		log.Println("未设置 BOT_TOKEN，仅启动 HTTP 推送服务（无机器人）")
+	cfg := config.Load()
+	if cfg.TelegramBotToken == "" {
+		log.Fatal("bot: TELEGRAM_BOT_TOKEN is required")
 	}
-
-	db, err := app.OpenDB()
-	if err != nil {
-		log.Fatal("db: ", err)
-	}
-
-	svr, err := bot.NewServer(cfg, db)
+	bot, err := tgbotapi.NewBotAPI(cfg.TelegramBotToken)
 	if err != nil {
 		log.Fatal("bot: ", err)
 	}
+	bot.Debug = false
+	log.Printf("bot: started as @%s (scaffold)", bot.Self.UserName)
 
-	ctx, stop := signal.NotifyContext(context.Background(), os.Interrupt, syscall.SIGTERM)
-	defer stop()
-
-	if err := svr.Run(ctx); err != nil {
-		log.Fatal(err)
+	u := tgbotapi.NewUpdate(0)
+	u.Timeout = 60
+	updates := bot.GetUpdatesChan(u)
+	for update := range updates {
+		if update.Message != nil {
+			// TODO: 处理命令与回调
+			_, _ = bot.Send(tgbotapi.NewMessage(update.Message.Chat.ID, "ok"))
+		}
 	}
 }

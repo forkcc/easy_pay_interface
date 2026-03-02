@@ -1,0 +1,77 @@
+# 仅包含应用服务，使用 host 网络；Zookeeper / Postgres / Redis / RabbitMQ 需在宿主机或其它方式部署
+services:
+  merchant:
+    build:
+      context: .
+      args:
+        CMD: merchant
+    network_mode: host
+    environment:
+      - DUBBO_PORT=20001
+      - ZK_ADDR=${ZK_ADDR:-127.0.0.1:2181}
+      - DB_DSN=${DB_DSN:-host=localhost user=postgres password=postgres dbname=easy_pay port=5432 sslmode=disable TimeZone=Asia/Shanghai}
+      - RABBITMQ_URL=${RABBITMQ_URL:-amqp://guest:guest@localhost:5672/}
+      - REDIS_ADDR=${REDIS_ADDR:-localhost:6379}
+      - REDIS_PASSWORD=${REDIS_PASSWORD:-}
+      - REDIS_DB=${REDIS_DB:-0}
+    restart: unless-stopped
+
+  agent:
+    build:
+      context: .
+      args:
+        CMD: agent
+    network_mode: host
+    environment:
+      - DUBBO_PORT=20002
+      - ZK_ADDR=${ZK_ADDR:-127.0.0.1:2181}
+      - DB_DSN=${DB_DSN:-host=localhost user=postgres password=postgres dbname=easy_pay port=5432 sslmode=disable TimeZone=Asia/Shanghai}
+      - RABBITMQ_URL=${RABBITMQ_URL:-amqp://guest:guest@localhost:5672/}
+      - REDIS_ADDR=${REDIS_ADDR:-localhost:6379}
+      - REDIS_PASSWORD=${REDIS_PASSWORD:-}
+      - REDIS_DB=${REDIS_DB:-0}
+    restart: unless-stopped
+
+  payment:
+    build:
+      context: .
+      args:
+        CMD: payment
+    network_mode: host
+    environment:
+      - DUBBO_PORT=20003
+      - ZK_ADDR=${ZK_ADDR:-127.0.0.1:2181}
+      - DB_DSN=${DB_DSN:-host=localhost user=postgres password=postgres dbname=easy_pay port=5432 sslmode=disable TimeZone=Asia/Shanghai}
+      - RABBITMQ_URL=${RABBITMQ_URL:-amqp://guest:guest@localhost:5672/}
+      - REDIS_ADDR=${REDIS_ADDR:-localhost:6379}
+      - REDIS_PASSWORD=${REDIS_PASSWORD:-}
+      - REDIS_DB=${REDIS_DB:-0}
+    restart: unless-stopped
+
+  bot:
+    build:
+      context: .
+      args:
+        CMD: bot
+    network_mode: host
+    environment:
+      - TELEGRAM_BOT_TOKEN=${TELEGRAM_BOT_TOKEN}
+      - RABBITMQ_URL=${RABBITMQ_URL:-amqp://guest:guest@localhost:5672/}
+      - REDIS_ADDR=${REDIS_ADDR:-localhost:6379}
+      - REDIS_PASSWORD=${REDIS_PASSWORD:-}
+      - REDIS_DB=${REDIS_DB:-0}
+    restart: unless-stopped
+
+  job:
+    build:
+      context: .
+      args:
+        CMD: job
+    network_mode: host
+    environment:
+      - DB_DSN=${DB_DSN:-host=localhost user=postgres password=postgres dbname=easy_pay port=5432 sslmode=disable TimeZone=Asia/Shanghai}
+      - RABBITMQ_URL=${RABBITMQ_URL:-amqp://guest:guest@localhost:5672/}
+      - REDIS_ADDR=${REDIS_ADDR:-localhost:6379}
+      - REDIS_PASSWORD=${REDIS_PASSWORD:-}
+      - REDIS_DB=${REDIS_DB:-0}
+    restart: unless-stopped
